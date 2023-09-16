@@ -230,6 +230,90 @@ To check the status report
 <details>
         
 <summary>Chip FLoorplanning consideration</summary>
+
+**Width and Height of core and die**
+
+Lets begin an example of a netlist as follows:
+![Screenshot from 2023-09-16 15-06-17](https://github.com/simarthethi/Advance_physical_design/assets/140998783/0b06c5be-f834-46cc-963a-6b2921cc7013)
+
+In here we see that the gates and flipflops have a certain shape which is for our understanding so that we differentiate between them. But in an electonic design the gates and other components are taken in the shapes of squares and rectangles so that we can define the size of the components
+
+![Screenshot from 2023-09-16 15-21-01](https://github.com/simarthethi/Advance_physical_design/assets/140998783/8189e1d6-facf-4184-b3e4-a42082abcc62)
+
+*Utilisation Factor*
+
+```bash
+Utilisation factor: Area covered by the netlist/total area of the core
+```
+
+- The ratio of area occupied by the cells in the netlist to the total area of the core
+- Best practice is to set the utilisation factor less than 50% so that there will be space for optimisations, routing, inserting buffers etc.,
+
+*Aspect Ratio*
+```bash
+Aspect ratio : width/height
+```
+
+- Aspect ratio is the ratio of height to the width of the die.
+- Aspect Ratio of 1 indicates that the die is a square die
+
+These two Parameters are important to derive the width and height of the core and die, and now we can move ahead to define the location of preplaces cells.
+
+**Pre-placed Cells**
+
+- Whenever there is a complex logic which is repeated multiple times or a design given by a third-party it can be perceived as abstract black box with input and output ports, clocks etc. We can also create black boxes ourselves for the design in case as per the requirements. They can be IPs or Macros
+- These Macros and IPs are placed in the core at first before placing the standard cells and power planning. These are optimally such that the cells which are more connected to each other are placed nearby and oriented for input and ouputs.
+- Once they have been placed, the location are not altered later on for routing. Thus they have been fixed on the chip.
+- These pre-placed cells have to be surrounded with de-coupling capacitors.
+
+**De-coupling Capacitors**
+
+- The resistances and capacitances associated with long wire lengths can cause the power supply voltage to drop significantly before reaching the logic circuits. This can lead to the signal value entering into the undefined region, outside the noise margin range.
+- De-coupling capacitors are huge capacitors charged to power supply voltage and placed close the logic circuit. Their role is to decouple the circuit from power supply by supplying the necessary amount of current to the circuit. They pervent crosstalk and enable local communication.
+
+**Power Planning**
+
+- Each block on the chip, however, cannot have its own decap unlike the pre-placed cells.
+Thus, when multiple units are discharging, we observe a ground bumb and in case of multiple
+charing units, we see a voltage droop.
+- When thses are under noise range designed, we won't face any issue, but if they get beyond
+the defined noise range, we experience undesired behaviour from the design.
+- To fix this issue, we will go for a better power plan for the chip, such that each unit can
+use the Vdd and Gnd near to it.
+- A common way to accomplish this is to have VDD and VSS pads connected to the horizontal and
+vertical power and GND lines which form a power mesh.
+
+**Pin Placement**
+
+- The input, output and Clock pins are placed optimally such that there is less complication
+in routing or optimised delay.
+- Note - CLK needs least resistive path, as they provide signals to all the flops
+continuously, thus have bigger IO ports.
+- There are different styles of pin placement in openlane like random pin placement, uniformly
+spaced etc.,
+
+Run Floorplan on OpenLane
+
+- Importance files in increasing priority order:
+        floorplan.tcl - System default envrionment variables
+        conifg.tcl
+        sky130A_sky130_fd_sc_hd_config.tcl
+
+- Floorplan envrionment variables or switches:
+        FP_CORE_UTIL - floorplan core utilisation
+        FP_ASPECT_RATIO - floorplan aspect ratio
+        FP_CORE_MARGIN - Core to die margin area
+        FP_IO_MODE - defines pin configurations (1 = equidistant/0 = not equidistant)
+        FP_CORE_VMETAL - vertical metal layer
+        FP_CORE_HMETAL - horizontal metal layer
+
+Now, we will look into how to generate the floorplan using OpenLane.
+```bash
+run_floorplan
+```
+
+
+
         
 </details>
 
