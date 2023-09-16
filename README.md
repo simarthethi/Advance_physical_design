@@ -311,11 +311,75 @@ Now, we will look into how to generate the floorplan using OpenLane.
 ```bash
 run_floorplan
 ```
+![week 3 day_2 rn_floorplan](https://github.com/simarthethi/Advance_physical_design/assets/140998783/a1fd458f-88bc-44fd-8229-276d462c7d08)
+
+-    We may review floorplan files by checking the floorplan.tcl. The system defaults will
+have been overriden by switches set in conifg.tcl and further overriden by switches set in
+sky130A_sky130_fd_sc_hd_config.tcl.
+
+-    Post the floorplan run, a .def file will have been created within the results/floorplan
+directory. It has the various informations such as the die area and unit lenghts used.
+
+```bash
+cd /OpenLane/designs/picorv32a/runs/RUN_2023.09.08_13.53.29/results/floorplan
+less picorv32.def
+```
+![def_file floorplan](https://github.com/simarthethi/Advance_physical_design/assets/140998783/df2dfd33-a3cc-4f9f-90a3-c52ee015aa02)
+
+- we can't read how the components and the netlists are placed in the floorplan by reading the .def file
+Hence we'll view the floorplan in Magic
+
+**View floorplan on magic**
+
+To view the floorplan, Magic is invoked after moving to the results/floorplan directory:
+```bash
+ magic -T ~/.volare/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.nom.lef def read picorv32.def &
+```
+![day_2 magic](https://github.com/simarthethi/Advance_physical_design/assets/140998783/118f2cd3-0e61-4e86-b051-d40eeb4d1350)
+
+One can zoom into Magic layout by selecting an area with left and right mouse click followed by pressing "z" key.
+
+Various components can be identified by using the what command in tkcon window after making a selection on the component.
+
+Zooming in also provides a view of decaps present in picorv32a chip.
+
+The standard cell can be found at the bottom left corner.
+
+You can clearly see I/O pins, Decap cells and Tap cells. Tap cells are placed in a zig zag manner or you can say diagonally
+
+![Screenshot from 2023-09-16 15-35-42](https://github.com/simarthethi/Advance_physical_design/assets/140998783/c2e60927-3637-4913-9ac7-f4ab2a0eb30c)
+        
+</details>
+
+<details>
+<summary>Library binding and Placement</summary>
+
+First and foremost, we need to bind the netlist with physical cells. We have shapes for OR, 
+AND and every cell for pratice purpose. But in reality we dont have such shapes, we have give 
+an physical dimensions like rectangles or squares weight and width. This information is given 
+in libs and lefs. Now we place these cells in our design by initilaising it.
+
+Now we look into Placement and its optimisation.
+
+**Optimise Placement**
+
+The next step is placement. Once we initial the design, the logic cells in netlist in its physical dimisoins is placed on the floorplan. Placement is perfomed in 2 stages:
+
+- Global Placement: Cells will be placed randomly in optimal positions which may not be legal and cells may overlap. Optimization is done through reduction of half parameter wire length.
+- Detailed Placement: It alters the position of cells post global placement so as to legalise them. Legalisation of cells is important from timing point of view.
+
+Optimization is stage where we estimate the lenght and capictance, based on that we add buffers. Ideally, Optimization is done for better timing.
+
+- Run Placement on OpneLane
+```bash
+run_placement
+```
+![Screenshot from 2023-09-16 19-46-38](https://github.com/simarthethi/Advance_physical_design/assets/140998783/d720e1d3-c957-49ab-9fdf-6dad80f7cf22)
+
+
 
 
 
         
 </details>
-
-
         
