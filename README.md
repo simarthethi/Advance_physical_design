@@ -224,7 +224,7 @@ To check the status report
 ![Screenshot from 2023-09-09 19-26-50](https://github.com/simarthethi/Advance_physical_design/assets/140998783/e1b37238-d852-48ec-b1e9-3fa778e7036c)
 ![Screenshot from 2023-09-09 19-26-55](https://github.com/simarthethi/Advance_physical_design/assets/140998783/a44c9beb-f571-48c2-ab76-d6ceb0c163f4)
 
-<details/>
+</details>
 
 # Day 2        
 <details>
