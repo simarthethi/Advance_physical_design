@@ -226,6 +226,7 @@ To check the status report
 
 <details/>
 <details>
+        
 <summary>Chip FLoorplanning consideration</summary>
         
 </details>
