@@ -1128,3 +1128,91 @@ report_checks -path_delay min_max -format full_clock_expanded -digits 4
 ![Screenshot from 2023-09-18 02-15-34](https://github.com/simarthethi/Advance_physical_design/assets/140998783/221d8d04-8aa2-4da2-9fbb-9a1a62eba397)
 
 </details>
+
+# Day 5
+
+<details>
+<summary>Routing and Design Rule Check</summary>
+
+**Maze Routing and Lee's Algorithm**
+
+- Routing is the process of establishing a physical connection between two pins. Algorithms designed for routing take source and target pins and aim to find the most efficient path between them, ensuring a valid connection exists.
+- The Maze Routing algorithm, such as the Lee algorithm, is one approach for solving routing problems.Here a grid similar to the one created during cell customization is utilized for routing purposes.
+- The Lee algorithm starts with two designated points, the source and target, and leverages the routing grid to identify the shortest or optimal route between them.
+- Lee's Algorithm has its limitations. It can be time consuming when dealing with millions of pins.It essentially constructs a maze and then numbers its cells from the source to the target. here are alternative algorithms that address similar routing challenges.
+- Here in this case he shortest path is one that follows a steady increment of one.There might be multiple paths, but the best path that the tool will choose is one with less bends.The route should not be diagonal and must not overlap an obstruction such as macros. The Lee algorithm prioritizes selecting the best path, typically favoring L-shaped routes over zigzags. If no L-shaped paths are available, it may resort to zigzag routes. This approach is particularly valuable for global routing tasks.
+- This algorithm however has high run time and consume a lot of memory thus more optimized routing algorithm is preferred .
+![image](https://github.com/simarthethi/Advance_physical_design/assets/140998783/48e7db0b-7a24-40cf-af11-133f711ec6d5)
+
+**Design Rule Check**
+
+- Design rule checks are physical checks of metal width, pitch and spacing requirement for the different layers which depend on different technology nodes.It verifies whether a design meets the predefined process technology rules given by the foundry for its manufacturing.
+
+- The layout of a design must be in accordance with a set of predefined technology rules given by the foundry for manufacturability. After completion of the layout and its physical connection, an automatic program will check each and every polygon in the design against these design rules and report any violations.
+
+![image](https://github.com/simarthethi/Advance_physical_design/assets/140998783/6e65848a-70c7-4102-b059-6c816bb4632b)
+ 
+</details>
+
+<details>
+<summary>Power Distribution Network and Routing</summary>
+
+- Unlike the general ASIC flow, Power Distribution Network generation is not a part of floorplan run in OpenLANE. PDN must be generated after CTS and post-CTS STA analyses:
+- We can check whether PDN has been created or no by check the current def environment variable: ```echo $::env(CURRENT_DEF)```
+```bash
+gen_pdn
+```
+![image](https://github.com/simarthethi/Advance_physical_design/assets/140998783/e544e65f-954c-4bdb-8647-ce321777b78c)
+
+- gen_pdn Generates the power distribution network.
+- The power distribution network has to take the design_cts.def as the input def file.
+- Power rings,strapes and rails are created by PDN.
+- From VDD and VSS pads, power is drawn to power rings.
+- Next, the horizontal and vertical strapes connected to rings draw the power from strapes.
+- Stapes are connected to rings and these rings are connected to std cells. So, standard cells get power from rails.
+- Here are definitions for the straps and the rails. In this design, straps are at metal layer 4 and 5 and the standard cell rails are at the metal layer 1. Vias connect accross the layers as required.
+
+![image](https://github.com/simarthethi/Advance_physical_design/assets/140998783/0f438984-93f4-4429-a754-48cf0e514696)
+
+ 
+</details>
+<details>
+<summary>Routing</summary>
+
+In the realm of routing within Electronic Design Automation (EDA) tools, such as both OpenLANE and commercial EDA tools, the routing process is exceptionally intricate due to the vast design space. To simplify this complexity, the routing procedure is typically divided into two distinct stages: Global Routing and Detailed Routing.
+
+- The two routing engines responsible for handling these two stages are as follows:
+
+	-    Global Routing:
+
+    In this stage, the routing region is subdivided into rectangular grid cells and represented as a coarse 3D routing graph. This task is accomplished by the "FASTE ROUTE" engine.
+
+	-    Detailed Routing:
+
+    Here, finer grid granularity and routing guides are employed to implement the physical wiring. The "tritonRoute" engine comes into play at this stage. "Fast Route" generates initial routing guides, while "Triton Route" utilizes the Global Route information and further refines the routing, employing various strategies and optimizations to determine the most optimal path for connecting the pins.
+
+Key Features of TritonRoute
+
+- Initial Detail Routing: TritonRoute initiates the detailed routing process, providing the foundation for the subsequent routing steps.
+
+-    Adherence to Pre-Processed Route Guides: TritonRoute places significant emphasis on following pre-processed route guides. This involves several actions:
+
+-    Initial Route Guide Analysis: TritonRoute analyzes the directions specified in the preferred route guides. If any non-directional routing guides are identified, it breaks them down into unit widths.
+
+-    Guide Splitting: In cases where non-directional routing guides are encountered, TritonRoute divides them into unit widths to facilitate routing.
+
+-    Guide Merging: TritonRoute merges guides that are orthogonal (touching guides) to the preferred guides, streamlining the routing process.
+
+-    Guide Bridging: When it encounters guides that run parallel to the preferred routing guides, TritonRoute employs an additional layer to bridge them, ensuring efficient routing within the preprocessed guides.
+
+Assumes route guide for each net satisfy inter guide connectivity Same metal layer with touching guides or neighbouring metal layers with nonzero vertically overlapped area( via are placed ).each unconnected termial i.e., pin of a standard cell instance should have its pin shape overlapped by a routing guide( a black dot(pin) with purple box(metal1 layer))
+
+**TritonRoute problem statement**
+```bash
+Inputs : LEF, DEF, Preprocessed route guides
+Output : Detailed routing solution with optimized wire length and via count
+Constraints : Route guide honoring, connectivity constraints and design rules.
+```
+
+ 
+</details>
