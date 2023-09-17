@@ -828,7 +828,30 @@ met5 Y 1.70 3.40
 ```
 - It tells us about all the metal layers as such.
 - We learnt that the input port and output for should be on the intersection of horizontal and vertical tracks, to verify this we set the grids as 
+```bash
+grid 0.46um 0.34um 0.23um 0.17um
+```
+![Screenshot from 2023-09-18 00-54-21](https://github.com/simarthethi/Advance_physical_design/assets/140998783/c5ad194a-6231-453e-90e1-a930e306d82d)
+
+- The second condition is also verified. The X-pitch is 0.46 and we can see that the standard cell is 3 times that, thus an odd multiple.
+- The same can be verified for the height of the standard cell.
+
+**Creation of Ports**
+
+- Once the layout is ready, the next step is extracting LEF file for the cell.
+
+- Certain properties and definitions need to be set to the pins of the cell. For LEF files, a cell that contains ports is written as a macro cell, and the ports are the declared as PINs of the macro.
+
+- Our objective is to extract LEF from a given layout (here of a simple CMOS inverter) in standard format. Defining port and setting correct class and use attributes to each port is the first step.
+
+- Method for definng ports
+	- In Magic Layout window, first source the .mag file for the design (here inverter). Then Edit >> Text which opens up a dialogue box.
+	- For each layer (to be turned into port), make a box on that particular layer and input a label name along with a sticky label of the layer name with which the port needs to be associated. Ensure the Port enable checkbox is checked and default checkbox is unchecked.
+![Screenshot from 2023-09-18 00-59-56](https://github.com/simarthethi/Advance_physical_design/assets/140998783/695d66ac-cc9b-487c-b6e7-0af54a353fc9)
 
 
-        
+- Port A (input port) and port Y (output port) are taken from locali (local interconnect) layer. Also, the number in the textarea near enable checkbox defines the order in which the ports will be written in LEF file (0 being the first).
+- For power and ground layers, the definition could be same or different than the signal layer. Here, ground and power connectivity are taken from metal1 (Notice the sticky label).
+
+	
 </details>
