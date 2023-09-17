@@ -618,14 +618,120 @@ From Layout, we see the layers which are required for CMOS inverter. Inverter is
 
 **Designing standard cell**
 
-- First we need to provide bounding box width and height in tkson window. lets say that width of BBOX is 1.38u and height is 2.72u. The command to give these values to MAGIC is property Fixed BBOX (0 0 1.32 2.72)
-    After this, Vdd, GND segments which are in metal 1 layer, their respective contacts and atlast logic gates layout is defined Inorder to know the logical functioning of the inverter, we extract the spice and then we do simulation on the spice.
+- First we need to provide bounding box width and height in tkson window. lets say that width of BBOX is 1.38u and height is 2.72u. The command to give these values to MAGIC is ```property Fixed BBOX (0 0 1.32 2.72)```
+- After this, Vdd, GND segments which are in metal 1 layer, their respective contacts and atlast logic gates layout is defined Inorder to know the logical functioning of the inverter, we extract the spice and then we do simulation on the spice.
+
+**SPICE extraction in MAGIC**
+
+To extract it on spice we open TKCON window, the steps are :
+
+-    Know the present directory - pwd
+- create an extration file - the command is ```extract all``` and ```sky130_inv.ext``` files has been created
+- create spice file using .ext file to be used with our ngspice tool - the commands are
+        - ```ext2spice cthresh 0 rthresh 0``` - extracts parasatic capcitances also since these are actual layers - nothing is created in the folder
+        - ```ext2spice``` - a file sky130_inv.spice has been created.
+![Screenshot from 2023-09-17 16-53-03](https://github.com/simarthethi/Advance_physical_design/assets/140998783/72efc390-38a4-4685-8fb7-75651fdba9e4)
+
+</details>
+
+<details>
+<summary>Lab on sky130A tech file</summary>
+
+Under this section, we will go over how to infer the spice deck file and how to run the transient analysis using NGspice. Once the simulation is done, we will characterise the simulation plot.
+
+**Spice Deck**
+
+- The design is scaled to 0.01u
+- The NMOS and PMOS are defined as
+        - ```cell_name drain_node gate_node source_node model_file_name```
+```bash
+M1000 Y A VGND VGND nshort_model.0 w=35 l=23
+M1001 Y A VPWR VPWR pshort_model.0 w=37 l=23
+```
+
+- We will include the model files for NMOS and PMOS from the ```libs``` directory.
+
+```bash
+ .include ./libs/nshort.lib
+ .include ./libs/pshort.lib
+```
+
+
+- Now, we set up the connections to the nodes with ground, Vdd and input pulses.
+        - VGND to VSS 0V
+        - Supply voltage VPWR to GND.
+        - Sweeping a pulse input.
+- Now we set the transient analysis.
+```bash
+VDD VPWR 0 3.3V
+VSS VGND 0 0V
+Va A VGND PULSE(0V 3.3V 0 0.1ns 0.1ns 2ns 4ns)
+.tran 1n 20n
+.control
+run
+.endc
+.end
+```
+-final Spice deck for simulation
+![Screenshot from 2023-09-17 17-06-21](https://github.com/simarthethi/Advance_physical_design/assets/140998783/e760261c-6f5f-45e6-8e8b-e27edaa763f6)
+
+**NGpsice Simulation and Characterization**
+-  Code to run the simulation
+```bash
+ngspice sky130_inv.spice
+```
+![Screenshot from 2023-09-17 17-37-29](https://github.com/simarthethi/Advance_physical_design/assets/140998783/8b5c617b-082b-416c-883e-5756b7b3a433)
+
+-  To get the plot for output against time with the sweeping input
+```bash
+plot y vs time a
+```
+![Screenshot from 2023-09-17 19-09-21](https://github.com/simarthethi/Advance_physical_design/assets/140998783/845f53d8-daef-42b3-8939-04e4b74de212)
+
+
+- Now we have to characterise the plot.
+- There are four timing parameters used to characterize the inverter standard cell:
+        - Rise transition - Time taken for the output to rise from 20% to 80% of max value => ```2.240 - 2.143 = 0.067ns```
+        - Fall Transition - Time taken for the output to fall from 80% to 20% of max value => ```4.0921 - 4.049 = 0.0431ns```
+        - Cell Rise delay - Difference in time(50% output rise) to time(50% input fall) => ```2.17333 - 2.13 = 0.0433ns```
+        - Cell Fall delay - Difference in time(50% output fall) to time(50% input rise) => ```4.076 - 4.0501 = 0.0259ns```
+
+**DRC Challenges**
+
+Under this section, we will go over
+
+- In-depth overview of Magic's DRC engine
+- Introduction to Google/Skywater DRC rules
+- Lab : Warm-up exercise : Fixing a simple rule error
+- Lab : Main exercie : Fixing or create a complex error
+
+**Introdution to Magic and Skywater PDK**
+
+*Lab Setup*
+
+- Setup to view the layouts
+- For extracting and generating views, Google/skywater repo files were built with Magic
+- Technology file dependency is more for any layout. hence, this file is created first.
+- Since, Pdk is still under development, there are some unfinished tech files and these are packaged for magic along with lab exercise layout and bunch of stuff into the tar ball
+
+```bash
+wget http://opencircuitdesign.com/open_pdks/archive/drc_tests.tgz
+```
+- Once we have downloaded the archive in the home directory, we extract it to get the lab .mag files
+
+![Screenshot from 2023-09-17 19-14-48](https://github.com/simarthethi/Advance_physical_design/assets/140998783/bf25a7c9-4aa4-43e3-84bc-0a967d46339c)
+
+- There is a hidden file ```.magicrc``` which directs to the various resources for the lab work ahead.
+```bash
+magic -d XR
+```
+![Screenshot from 2023-09-17 22-32-35](https://github.com/simarthethi/Advance_physical_design/assets/140998783/627594f5-1abe-4d2f-b584-e6671a10e096)
 
 
 
 
 
 
-        
+
 </details>
         
