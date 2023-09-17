@@ -609,6 +609,18 @@ From Layout, we see the layers which are required for CMOS inverter. Inverter is
 - If we want to see connections between two different parts, place the cursor over that area and press S one times. The tkson window gives the component name.
 ![Screenshot from 2023-09-17 21-57-02](https://github.com/simarthethi/Advance_physical_design/assets/140998783/fb4fa745-5840-4383-9e34-64b0bad4ea2e)
 
+**LEF - Library Exchange File**
+
+-    The layout of a design is defined in a specific file called LEF.
+-    It includes design rules (tech LEF) and abstract information about the cells.
+        - Tech LEF - Technology LEF file contains information about the Metal layer, Via Definition and DRCs.
+        - Macro LEF - Contains physical information of the cell such as its Size, Pin, their direction.
+
+**Designing standard cell**
+
+- First we need to provide bounding box width and height in tkson window. lets say that width of BBOX is 1.38u and height is 2.72u. The command to give these values to MAGIC is property Fixed BBOX (0 0 1.32 2.72)
+    After this, Vdd, GND segments which are in metal 1 layer, their respective contacts and atlast logic gates layout is defined Inorder to know the logical functioning of the inverter, we extract the spice and then we do simulation on the spice.
+
 
 
 
