@@ -1062,6 +1062,15 @@ Adaptive CTS techniques adjust the clock tree structure dynamically based on the
 - VLSI designers may use shielding techniques to isolate the clock network from other signals, reducing the risk of interference. This can include dedicated clock routing layers, clock tree synthesis algorithms, and buffer insertion to manage clock distribution more effectively.
 - VLSI designs often have multiple clock domains. Shielding and proper clock gating help ensure that clock signals do not propagate between domains, avoiding metastability issues and maintaining synchronization.
 
+Note - In this stage clock is propagated and make sure that clock reaches each and every clock pin from clock source with mininimum skew and insertion delay. Inorder to do this, we implement H-tree using mid point strategy. For balancing the skews, we use clock invteres or bufferes in the clock path. Before attempting to run CTS in TritonCTS tool, if the slack was attempted to be reduced in previous run, the netlist may have gotten modified by cell replacement techniques. Therefore, the verilog file needs to be modified using the ```write_verilog``` command. Then, the synthesis, floorplan and placement is run again.
+
+LAB Continued
+
+- We will continue after the synthesis, floorplan and placement. We run the CTS as
+```bash
+run_cts
+```
+![Screenshot from 2023-09-18 02-11-19](https://github.com/simarthethi/Advance_physical_design/assets/140998783/7cd4aa4f-df56-468a-b7c8-03a98a3fac0a)
 
 
 
@@ -1069,4 +1078,53 @@ Adaptive CTS techniques adjust the clock tree structure dynamically based on the
  
 </details>
 
+<details>
+<summary>Timing Analysis with Real Clocks using OpenSTA</summary>
 
+- Analyzing setup time is a crucial element of designing digital circuits, especially in synchronous digital systems.
+- It pertains to the duration during which a signal must remain steady and valid prior to the arrival of the clock edge.
+- Guaranteeing the fulfillment of setup time prerequisites is vital for averting data errors and securing the correct functioning of the digital circuit.
+
+![image](https://github.com/simarthethi/Advance_physical_design/assets/140998783/64d56528-8a4b-4491-80c3-d64aca2a0bac)
+
+
+
+- To ensure the setup time requirements are met we need to make sure of some things:
+
+    Selecting proper Filp flops or latches.
+    Optimize combinational logic
+    Clock Skew Analysis
+    Timing constraints
+- Meeting setup time requrirements is cruical for a good digital circuit operation. If not done can result in data errors and multifunctioning of the circuit.
+
+**Holding Timing Analysis using Real Clock**
+
+- Analysis of hold time is an equally vital component of digital circuit design, especially in synchronous systems.
+- It concerns the minimum duration during which a data input (D) needs to maintain its stability and validity after the clock edge before any changes can occur.
+- Ensuring that hold time requirements are met is essential to prevent data corruption and ensure the proper operation of digital circuits.
+![image](https://github.com/simarthethi/Advance_physical_design/assets/140998783/644e119b-1178-48d6-987f-ac2fde0f9800)
+
+**LAB continued**
+```bash
+openroad
+read_lef /home/shant/OpenLane/designs/picorv32a/runs/RUN_2023.09.11_06.05.06/tmp/merged.nom.lef 
+read_def /home/shant/OpenLane/designs/picorv32a/runs/RUN_2023.09.11_06.05.06/results/cts/picorv32.def 
+read_verilog /home/shant/OpenLane/designs/picorv32a/runs/RUN_2023.09.11_06.05.06/results/synthesis/picorv32.v
+write_db pico_cts.db
+read_db pico_cts.db
+read_verilog /home/shant/OpenLane/designs/picorv32a/runs/RUN_2023.09.11_06.05.06/results/synthesis/picorv32.v
+link_design picorv32
+read_liberty $::env(LIB_SYNTH_COMPLETE)
+read_sdc /home/shant/OpenLane/designs/picorv32a/src/my_base.sdc
+set_propagated_clock (all_clocks)
+report_checks -path_delay min_max -format full_clock_expanded -digits 4
+```
+
+- Since, clock is propagated, from this stage, we do timing analysis with real clocks. From now post cts analysis is performed by operoad within the openlane flow
+- Hold Slack
+![Screenshot from 2023-09-18 02-13-20](https://github.com/simarthethi/Advance_physical_design/assets/140998783/59f37b12-1049-4986-b5e3-33ee6db4b001)
+
+- Setup Slack
+![Screenshot from 2023-09-18 02-15-34](https://github.com/simarthethi/Advance_physical_design/assets/140998783/221d8d04-8aa2-4da2-9fbb-9a1a62eba397)
+
+</details>
