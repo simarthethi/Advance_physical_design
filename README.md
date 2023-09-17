@@ -564,6 +564,56 @@ Under this section we will look into the Fabrication process. We will look into 
 - High-temperature furnace processes drive-in diffusion to establish well depths, known as the twin-tub process.
 ![Screenshot from 2023-09-17 18-23-46](https://github.com/simarthethi/Advance_physical_design/assets/140998783/a06852e6-c614-41f1-8663-e52e75636a20)
 
+4.Formation of Gate Terminal
+- Gate is the most important terminal as here we control the input voltage.
+- Important parameters for gate formation include oxide capacitance and doping concentration.
+- A polysilicon layer is deposited and photolithography techniques are applied to create NMOS and PMOS gates.
+- The SiO2 layers over Nwell and Pwell are etched off using polysulpuric acid and fresh layer is made with goof thickness.
+![Screenshot from 2023-09-17 18-24-29](https://github.com/simarthethi/Advance_physical_design/assets/140998783/6c609940-98bb-4962-b702-a8c4036e9fbb)
+
+5.Lightly-Doped Drain(LDD) Formation
+- This is done to achieve a doping profile --> P+, P-, N for NMOS and N+, N- and P for PMOS.
+- LDD is created to control hot electron and short channel effects.
+![Screenshot from 2023-09-17 18-24-52](https://github.com/simarthethi/Advance_physical_design/assets/140998783/8a5f1c79-85ca-40b0-b92b-42703b647e5b)
+
+6.Source and Drain Formation
+- Thin oxide layers are added to avoid channel effects during ion implantation.
+- N+ and P+ implants are performed using Arsenic implantation and high-temperature annealing.
+![Screenshot from 2023-09-17 18-25-23](https://github.com/simarthethi/Advance_physical_design/assets/140998783/f193716b-845d-42fb-a1d1-f4982308970a)
+
+7.Local Interconnect Formation
+- Thin screen oxide is removed through etching in HF solution.
+- Titanium deposition through sputtering is initiated.
+- Heat treatment results in chemical reactions, producing low-resistant titanium silicon dioxide for interconnect contacts and titanium nitride for top-level connections, enabling local communication.
+![Screenshot from 2023-09-17 18-25-32](https://github.com/simarthethi/Advance_physical_design/assets/140998783/30ca77c0-4074-4437-ae5d-110e647a984c)
+
+8.Higher Level Metal Formation
+- To achieve suitable metal interconnects, non-planar surface topography is addressed.
+- Chemical Mechanical Polishing (CMP) is utilized by doping silicon oxide with Boron or Phosphorus to achieve surface planarization.
+- TiN and blanket Tungsten layers are deposited and subjected to CMP.
+- An aluminum (Al) layer is added and subjected to photolithography and CMP.
+- This constitutes the first level of interconnects, and additional interconnect layers are added to reach higher-level metal layers.
+![Screenshot from 2023-09-17 18-25-48](https://github.com/simarthethi/Advance_physical_design/assets/140998783/25975269-616c-4366-a14a-862bec7b64fb)
+
+9.Dielectric Layer Addition
+- Finally, a dielectric layer, typically Si3N4, is applied to safeguard the chip.
+
+This complex process results in the creation of advanced integrated circuits with multiple layers of interconnects, essential for modern electronic devices.
+
+**Introduction to SKY130 Basic Layout and LEF**
+
+From Layout, we see the layers which are required for CMOS inverter. Inverter is, PMOS and NMOS connected together.
+
+- Gates of both PMOS and NMOS are connected together and fed to input(here ,A), NMOS source connected to ground(here, VGND), PMOS source is connected to VDD(here, VPWR), Drains of PMOS and NMOS are connected together and fed to output(here, Y).
+- The First layer in skywater130 is localinterconnect layer(locali) , above that metal 1 is purple color and metal 2 is pink color.
+- If we want to see connections between two different parts, place the cursor over that area and press S one times. The tkson window gives the component name.
+![Screenshot from 2023-09-17 21-57-02](https://github.com/simarthethi/Advance_physical_design/assets/140998783/fb4fa745-5840-4383-9e34-64b0bad4ea2e)
+
+
+
+
+
+
         
 </details>
         
