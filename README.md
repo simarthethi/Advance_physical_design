@@ -1213,6 +1213,32 @@ Inputs : LEF, DEF, Preprocessed route guides
 Output : Detailed routing solution with optimized wire length and via count
 Constraints : Route guide honoring, connectivity constraints and design rules.
 ```
+The space where the detailed route takes place has been defined. Now TritonRoute handles the connectivity in two ways.
+
+- Access Point(AP) : An on-grid point on the metal of the route guide, and is used to connect to lower-layer segments, pins or IO ports,upper-layer segments. Access Point Cluster(APC) : A union of all the Aps derived from same lower-layer segment, a pin or an IO port, upper-layer guide.
+
+**TritonRoute run for routing**
+
+Make sure the CURRENT_DEF is set to pdn.def
+- Start routing by using
+```bash
+run_routing
+```
+![Screenshot from 2023-09-18 02-38-40](https://github.com/simarthethi/Advance_physical_design/assets/140998783/2e3bf34d-d88b-4be2-9388-2983907dc772)
+
+![Screenshot from 2023-09-18 02-40-57](https://github.com/simarthethi/Advance_physical_design/assets/140998783/962a76a5-f183-4880-a1df-c7e43bd74497)
+
+**Layout in magic tool post routing**
+
+- The design can be viewed on magic within results/routing directory. Run the follwing command in that directory:
+```bash
+magic -T ~/.volare/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.nom.lef def read picorv32.def &
+```
+![Screenshot from 2023-09-18 02-41-53](https://github.com/simarthethi/Advance_physical_design/assets/140998783/1278b86e-5343-4ffa-8fdb-5155ad79d50e)
+
+![Screenshot from 2023-09-18 02-42-46](https://github.com/simarthethi/Advance_physical_design/assets/140998783/e09dcf6c-ad70-4726-bd8f-2ca95557e8f1)
+
+
 
  
 </details>
