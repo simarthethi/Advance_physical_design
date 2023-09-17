@@ -954,15 +954,36 @@ When the algorithm works with these delay tables, it utilizes the provided input
 
 ![Screenshot from 2023-09-18 01-22-09](https://github.com/simarthethi/Advance_physical_design/assets/140998783/cf70499d-debe-41ac-a762-b7dff2a01919)
 
+**Custom Cell inclusion in OpenLane Flow**
 
+- We have seen till the synthesis for the custom standard cell in OpenLane flow, and verified the synthesis and STA log files. We will pick it from there now.
 
+- First check the slack for the synthesis.
 
+- The slack was positive, therefore we can proceed, else would have to work on the slack.
 
+- Now we run the floorplan and placement processes.
+```bash
+run_floorplan
+run_placement
+```
+![Screenshot from 2023-09-18 01-25-07](https://github.com/simarthethi/Advance_physical_design/assets/140998783/38e7fe85-59e9-42dc-98f8-b7329699b403)
 
+- Now, we check for legality &To check the layout invoke magic from the ```results/placement``` directory
 
+![Screenshot from 2023-09-18 01-27-14](https://github.com/simarthethi/Advance_physical_design/assets/140998783/eeac82c8-5fe2-42d7-97e3-7210ee8f9dbc)
 
+</details>
 
+<details>
+<summary>Timing Analysis with Ideal Clocks using OpenSTA </summary>
 
+Set-up Timing Analysis
+
+- Right now, we will consider the ideal clocks, thus the clock tree are not yet made.
+- We take a single clock and anlysis launch and capture flops. 
+
+![image](https://github.com/simarthethi/Advance_physical_design/assets/140998783/89706c18-fbd5-4368-883d-ccf5af64536c)
 
 
  
