@@ -853,5 +853,117 @@ grid 0.46um 0.34um 0.23um 0.17um
 - Port A (input port) and port Y (output port) are taken from locali (local interconnect) layer. Also, the number in the textarea near enable checkbox defines the order in which the ports will be written in LEF file (0 being the first).
 - For power and ground layers, the definition could be same or different than the signal layer. Here, ground and power connectivity are taken from metal1 (Notice the sticky label).
 
-	
+**Port Class and Port Use Attributes**
+
+- After defining ports, the next step is setting port class and port use attributes.
+- Select port A in magic:
+```bash
+port class input
+port use signal
+```
+- Select Y area
+```bash
+port class output
+port use signal
+```
+- Select VPWR area
+```bash
+port class inout
+port use power
+```
+- Select VGND area
+```bash
+port class inout
+port use ground
+```
+![Screenshot from 2023-09-17 23-45-29](https://github.com/simarthethi/Advance_physical_design/assets/140998783/99dd7c34-6770-480b-b396-28612a7554d0)
+
+![Screenshot from 2023-09-17 23-46-11](https://github.com/simarthethi/Advance_physical_design/assets/140998783/55bfb6ed-81ff-48c6-972d-14848394aa1d)
+
+**Extraction of LEF file**
+
+- Name the custom cell through tkcon window as sky130_shant.mag.
+- We generate lef file by command:
+```bash
+lef write
+```
+- Upon checking the directory, we can see the lef file being generated.
+![Screenshot from 2023-09-18 00-00-04](https://github.com/simarthethi/Advance_physical_design/assets/140998783/b0dfd7e0-39de-4025-8e45-f315dfcb1d94)
+- lef file generated.
+![Screenshot from 2023-09-18 00-01-10](https://github.com/simarthethi/Advance_physical_design/assets/140998783/6e02681e-34f7-47bd-a405-7cb16365f00a)
+
+![Screenshot from 2023-09-18 00-01-15](https://github.com/simarthethi/Advance_physical_design/assets/140998783/e06a94a1-0ff4-439e-9427-7242d24fab31)
+
+**Including Custom Cell ASIC Design**
+
+- First, we transfer the lef file generated ```sky130_simar.lef``` into the ```/home/simar-thethi/OpenLane/designs/picorv32a/src``` directory.
+
+- Then we will transfer the ```sky130_fd_sc_hd__fast.lib```, ```sky130_fd_sc_hd__slow.lib``` and ```sky130_fd_sc_hd__typical.lib``` into the same directory.
+
+- For this, we edit the config.json file as below
+```bash
+{
+  "DESIGN_NAME": "picorv32",
+  "VERILOG_FILES": "dir::src/picorv32a.v",
+  "CLOCK_PORT": "clk",
+  "CLOCK_NET": "clk",
+  "FP_SIZING": "relative",
+  "GLB_RESIZER_TIMING_OPTIMIZATIONS": true,
+  "LIB_SYNTH" : "dir::src/sky130_fd_sc_hd__typical.lib",
+  "LIB_FASTEST" : "dir::src/sky130_fd_sc_hd__fast.lib",
+  "LIB_SLOWEST" : "dir::src/sky130_fd_sc_hd__slow.lib",
+  "LIB_TYPICAL":"dir::src/sky130_fd_sc_hd__typical.lib",
+  "TEST_EXTERNAL_GLOB":"dir::/src/*",
+  "SYNTH_DRIVING_CELL":"sky130_vsdinv",
+  "pdk::sky130*": {
+    "FP_CORE_UTIL": 35,
+    "CLOCK_PERIOD": 24,
+    "scl::sky130_fd_sc_hd": {
+      "FP_CORE_UTIL": 30
+    }
+  }
+}
+```
+Now, we integrate standard cell on OpenLane flow after make mount, and follow up
+```bash
+prep -design picorv32a -tag RUN_2023.09.16_08.19.33 -overwrite 
+set lefs [glob $::env(DESIGN_DIR)/src/*.lef]
+add_lefs -src $lefs
+run_synthesis
+```
+
+![Screenshot from 2023-09-18 01-17-54](https://github.com/simarthethi/Advance_physical_design/assets/140998783/8c49ae86-3188-4eec-a9db-0c9890723a88)
+
+- Synthesis log file
+![Screenshot from 2023-09-18 01-19-36](https://github.com/simarthethi/Advance_physical_design/assets/140998783/e7c0860d-dcee-4dff-86dc-7340b521e144)
+
+- Static timing analysis (STA) log file
+![Screenshot from 2023-09-18 01-20-41](https://github.com/simarthethi/Advance_physical_design/assets/140998783/ce0a1980-d154-4e07-80ff-1bf68a3610ef)
+
+**Delay Table**
+
+Delay is a parameter that has huge impact on our cells in the design. Delay decides each and every other factor in timing. For a cell with different size, threshold voltages, delay model table is created where we can it as timing table.
+
+-  Delay of a cell depends on input transition and out load.
+
+Lets say two scenarios, we have long wire and the cell(X1) is sitting at the end of the wire : the delay of this cell will be different because of the bad transition that caused due to the resistance and capcitances on the long wire. we have the same cell sitting at the end of the short wire: the delay of this will be different since the tarn is not that bad comapred to the earlier scenario. Eventhough both are same cells, depending upon the input tran, the delay got chaned. Same goes with o/p load also.
+
+VLSI engineers have identified specific constraints when inserting buffers to preserve signal integrity. They've noticed that each buffer level must maintain consistent sizing, but their delays can vary depending on the load they drive. To address this, they introduced the concept of "delay tables", which essentially consist of 2D arrays containing values for input slew and load capacitance, each associated with different buffer sizes. These tables serve as timing models for the design.
+
+When the algorithm works with these delay tables, it utilizes the provided input slew and load capacitance values to compute the corresponding delay values for the buffers. In cases where the precise delay data is not readily available, the algorithm employs a technique of interpolation to determine the closest available data points and extrapolates from them to estimate the required delay values.
+
+![Screenshot from 2023-09-18 01-22-09](https://github.com/simarthethi/Advance_physical_design/assets/140998783/cf70499d-debe-41ac-a762-b7dff2a01919)
+
+
+
+
+
+
+
+
+
+
+
+
+ 
 </details>
