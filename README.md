@@ -393,6 +393,9 @@ magic -T ~/.volare/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merge
 
 </details>
 
+<details>
+<summary>Cell design and characterisation flow</summary>
+
 Under this section, we will go through a thorough insight into the Characterizatiob flow and various steps involved, what are my inputs given, my intermediate outputs and final results we get.
 
 Standard cell design flow involves the following
@@ -467,12 +470,93 @@ Low transition time = time(slew_high_fall_thr) - time (slew_low_fall_thr)
 ```
 </details>
 
-<details>
-<summary> </summary>
+# Day 3
 
+<details>
+<summary>Cmos Invertor ngspice lab </summary>
+        
+**IO Placer revision**
+
+- PnR is a iterative flow and hence, we can make changes to the environment variables in the fly to observe the changes
+in our design.
+- Let us say If I want to change my pin configuration along the core from equvi distance randomly placed to someother
+placement, we just set that IO mode variable on command prompt as shown below
+```bash
+set ::env(FP_IO_MODE) 2
+```
+Floorplan after chaning the format of IO placement. We can see the pins are now not equi-distant. 
+![day_3 floorplan not equidistant](https://github.com/simarthethi/Advance_physical_design/assets/140998783/ddbe368c-a566-4a95-948e-b45742b84393)
+
+**Spice Deck Creation**
+Spice Deck Creation
+
+- Spice deack is the connectivity information of netlist. Thus it is a netlist that contains component connectivity, inputs to be provided and tap points for taking output and connectivity of the substrate.
+- The source of PMOS is connected to Vdd and Source of NMOS is connected to GND, Vss in this case. Vin is given to the gates and Vout is taken out. We take the Cload as ```10fF``` for now.
+- Now we define the PMOS and NMOS width and length as ```0.375um``` and ```0.25um``` respectively. We give ```2.5V``` as Vdd and Vin. Common Vss is given.
+- Identify the nodes, name them. Nodes are points between which a component is connected.
+- We can now write the spice deck. We also specify the simulation type.
+- We also import the model file for NMOS and PMOS for information of parameters related to transistors
+
+![Screenshot from 2023-09-17 18-03-48](https://github.com/simarthethi/Advance_physical_design/assets/140998783/46060e6b-679b-44f8-894b-cbec87607c0e)
+
+**Spice Simulation**
+
+- We will run the simulation for the deck created with different widths and lengths for the PMOS and NMOS.
+
+![Screenshot from 2023-09-17 18-05-10](https://github.com/simarthethi/Advance_physical_design/assets/140998783/f67ae84c-07af-45d8-856f-593128a9ac2b)
+
+- From the waveform, irrespective of switching the shape of it are almost same. We can see the characteristics are maintained across all sizes of CMOS. So CMOS as a circuit is a robust device hence use in designing of logic gates. Parameters that define the robustness of the CMOS are
+
+**Switching Threshold (Vm)**
+        It is the point where out ```Vin = Vout```. To determine, we extend a 45 degree line from the origin.
+        At this point, both the transistors are in saturation region, means both are turned on and have high chances of current flowing driectly from VDD to Ground called Leakage current.
+        At this point, ```Vgs = Vds``` and ```Idsn = -Idsp```.
+
+![Screenshot from 2023-09-17 18-07-00](https://github.com/simarthethi/Advance_physical_design/assets/140998783/38688c93-eae3-41d3-b191-a3ced4711603)
+
+**Rise and Fall Delay**
+- We will run a transient simulation and plot Vin and VOut with respect to time.
+- To determine the Rise time, we take the rising input and corresponding falling output and note the time for ```Vdd/2``` i.e. 50% of the Vdd.
+- For fall time, same is repeated but for the falling input and corresponding rising input.
+
+**Steps to GIT CLONE vsdstdcelldesign**
+
+- We will git clone a custom made repo for this course in the OpenLane directory of our local system.
+```bash
+git clone https://github.com/nickson-jose/vsdstdcelldesign.git
+```
+- To invoke magic to view the sky130_inv.mag file, the sky130A.tech file must be included in the command along with its path. To ease up the complexity of this command, the tech file can be copied from the magic folder to the vsdstdcelldesign folder.
+
+- Invertor Layout using Magic
+![Screenshot from 2023-09-17 15-47-50](https://github.com/simarthethi/Advance_physical_design/assets/140998783/fd2de0bf-5fe8-47a8-bb92-edb10302aa89)
+
+
+</details>
+
+<details>
+<summary>Inception of Layout and CMOS Fabrication Process</summary>
+
+Under this section we will look into the Fabrication process. We will look into the various steps for 16-mask fab procedure
+
+**16-MASK CMOS Process***
+
+1. Selecting a substrate
+        -We choose an appropriate substrate as per requirement.
+        -We go with the most common substrate available - P-type.
+   ![Screenshot from 2023-09-17 18-13-04](https://github.com/simarthethi/Advance_physical_design/assets/140998783/4f90f176-fc61-477e-aff7-89a91184c0ad)
+
+2. Creation of Active regions for transistors
+        -We have to make isolation for each pocket, this is done by growing Silicon Dioxide of 40nm over the P-type substrate, then deposit an 80nm layer of Silicon nitride.
+        -Now deposit 1micron of photoresist. On this we make Mask1 and Mask 2 for the pockets and shower it with UV lights
+        -The photoresist under the masks are protected and remaining is etched away with some chemical reaction. Now the mask is removed.
+        -Now we etch off the extra silicon nitride, thus only silicon nitride left are the ones protected by the photoresist. Now Remove left photoresist.
+        -Now, place the entire thing in oxidation furnace. Silicon nitride protects the SiO2 underneath from growing further.
+        -The growth between the nitride layer acts as the isolation as they don't allow the transistor areas to communicate. This growth is also called bird's beak.
+        -The remaining nitride layer is etched off.
+        -This whole process is called LOCOS - Local oxidation of Silicon
+
+image
 
         
 </details>
-
-
         
