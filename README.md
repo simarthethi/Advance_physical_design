@@ -985,6 +985,88 @@ Set-up Timing Analysis
 
 ![image](https://github.com/simarthethi/Advance_physical_design/assets/140998783/89706c18-fbd5-4368-883d-ccf5af64536c)
 
+- In this, we assume that launch flop is triggered at the first posedge of clk and the capture flop recieves the value at the next posedge.
+- Suppose there was some combinational logic between the two, the delay of the logic should be less than the time period of the clock.
+- Thus the clock frequency and time period, and the combinational logic are designed with correspondence to each other.
+- Therefore my setup time for the combinational logic should be less than the time period of the clock.
+- Now, we will look into more real and practical conditions.
+- We look into the capture flop. It is made of multiple gates and muxes, which will have there mosfets, resistances and capacitances.
+- Thus will have delay associated to them.
+
+![image](https://github.com/simarthethi/Advance_physical_design/assets/140998783/a661ebab-a435-449c-87f9-278168bfb4cd)
+
+
+- Suppose the flop was developed with 2 muxes as shown. We have to condsider the delays.
+- This affect the combinational logic delay requirement. Now, the clock period T is not avaiable. The capture flop needs some setup time.
+- Thus the time avaiable for the combinational logic now is T - setupTime of capture flop.
+- Clock Jitter - clock is generated from PLL which has inbuilt circuit which cells and some logic. There might variations in the clock generation depending upon the ckt. These variations are collectivity known as clock uncertainity. In that jitter is one of the parameter. It is uncertain that clock might come at that exact time withought any deviation.
+- That is why it is called clock_uncertainity Skew, Jitter and Margin comes into clock_uncertainity
+
+![image](https://github.com/simarthethi/Advance_physical_design/assets/140998783/2c7ac8c9-e697-4c12-b4eb-e8801b3e18af)
+
+**Post-Synthesis Analysis using OpenSTA**
+
+Timing analysis is carried out outside the OpenLANE flow using OpenSTA tool. For this, pre_sta.conf is required to carry out the STA analysis. Invoke OpenSTA outside the openLANE flow as follows:
+```bash
+sta pre_sta.conf
+```
+Since clock tree synthesis has not been performed yet, the analysis is with respect to ideal clocks and only setup time slack is taken into consideration. The slack value is the difference between data required time and data arrival time. The worst slack value must be greater than or equal to zero. If a negative slack is obtained, following steps may be followed:
+
+- Change synthesis strategy, synthesis buffering and synthesis sizing values
+- Review maximum fanout of cells and replace cells with high fanout
+- sdc file for OpenSTA is modified.
+
+```base.sdc``` is located in ```vsdstdcelldesigns/extras``` directory. So, we copy it into our design folder using ```cp my_base.sdc /home/simar-thethi/OpenLane/designs/picorv32a/src/```
+
+![Screenshot from 2023-09-18 01-36-22](https://github.com/simarthethi/Advance_physical_design/assets/140998783/05b8f296-0593-4f45-b59b-f6b609ebabae)
+
+From the timing report, we can improve slack by upsizing the cells i.e., by replacing the cells with high drive strength and we can see significant changes in the slack. Since there were no timing violations, we can skip this step.
+
+Since clock is propagated only once we do CTS, In placement stage, clock is considered to be ideal. So only setup slack is taken into consideration before CTS.
+
+ </details>
+
+<details>
+<summary> Clock Tree Synthesis TritonCTS and Signal Integrity </summary>
+
+- This plays a vital role in the creation of integrated circuits (ICs), particularly in the realm of digital electronics, where precise timing is of utmost importance. CTS involves the establishment of an organized network or structure of pathways for distributing the clock signal within the IC. This meticulous process guarantees that the clock signal effectively reaches all the sequential components, such as flip-flops and registers, in a synchronized and punctual fashion.
+
+-    It can be implemeted in various ways and the choice of the specific technique depends on the design requirements, constraints, and goals.
+
+-    Some of the different types of approches to clock tree synthesis are:
+
+Balanced Tree CTS:
+The clock signal is spread out evenly, like branches of a tree. This helps ensure that all parts of the chip get the clock at about the same time, reducing timing problems. It's a straightforward method, but it might not save as much power as other methods.
+
+H-tree CTS:
+It is like a tree shape with the letter "H." It's great for spreading out clock signals across big chips. This tree structure helps make sure the timing is good and saves power, especially in large areas of the chip.
+
+Star CTS:
+In a star CTS, the clock signal is distributed from a single central point (like a star) to all the flip-flops. This approach simplifies clock distribution and minimizes clock skew but may require a higher number of buffers near the source.
+
+Mesh CTS:
+In a mesh CTS, clock wires are arranged in a mesh-like grid pattern, and each flip-flop is connected to the nearest available clock wire. It is often used in highly regular and structured designs, such as memory arrays. Mesh CTS can offer a balance between simplicity and skew minimization.
+
+Adaptive CTS:
+Adaptive CTS techniques adjust the clock tree structure dynamically based on the timing and congestion constraints of the design. This approach allows for greater flexibility and adaptability in meeting design goals but may be more complex to implement.
+
+**Crosstalk in VLSI**
+
+- Crosstalk in VLSI refers to unwanted interference or coupling between adjacent conductive traces or wires on an integrated circuit (IC) or chip.
+- It occurs when the electrical signals on one wire influence or disrupt the signals on neighboring wires.Uncontrolled crosstalk can lead to data corruption, timing violations, and increased power consumption.
+- Mitigation: VLSI designers employ various techniques to mitigate crosstalk, such as optimizing layout and routing, using appropriate shielding, implementing proper clock distribution strategies, and utilizing clock gating to reduce dynamic power consumption when logic is idle
+
+**Clock net sheilding in VLSI**
+
+- Clock net shielding in VLSI refers to a technique used to protect the clock signal from interference or crosstalk. The clock signal is critical for synchronizing the operations of various components on a chip, and any interference can lead to timing issues and performance problems.
+- VLSI designers may use shielding techniques to isolate the clock network from other signals, reducing the risk of interference. This can include dedicated clock routing layers, clock tree synthesis algorithms, and buffer insertion to manage clock distribution more effectively.
+- VLSI designs often have multiple clock domains. Shielding and proper clock gating help ensure that clock signals do not propagate between domains, avoiding metastability issues and maintaining synchronization.
+
+
+
+
 
  
 </details>
+
+
