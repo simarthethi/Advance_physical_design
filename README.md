@@ -554,6 +554,15 @@ Under this section we will look into the Fabrication process. We will look into 
 - The growth between the nitride layer acts as the isolation as they don't allow the transistor areas to communicate. This growth is also called bird's beak.
 - The remaining nitride layer is etched off.
 - This whole process is called LOCOS - Local oxidation of Silicon image
+![Screenshot from 2023-09-17 18-21-59](https://github.com/simarthethi/Advance_physical_design/assets/140998783/d2a84c8d-1eba-402f-b8e5-7f45f18f767c)
+
+3. Formation of N-Well and P-Well
+- The N-well and P-well regions are created separately.
+- P-well formation involves photolithography and ion implantation of p-type Boron material into the p-substrate. Energy required is 200keV.
+- N-well is formed similarly with n-type Phosphorus material. Energy requirement is 400keV.
+- This ion implantation damages the SiO2 layer.
+- High-temperature furnace processes drive-in diffusion to establish well depths, known as the twin-tub process.
+![Screenshot from 2023-09-17 18-23-46](https://github.com/simarthethi/Advance_physical_design/assets/140998783/a06852e6-c614-41f1-8663-e52e75636a20)
 
         
 </details>
