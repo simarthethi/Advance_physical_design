@@ -541,21 +541,19 @@ Under this section we will look into the Fabrication process. We will look into 
 **16-MASK CMOS Process***
 
 1. Selecting a substrate
-        -We choose an appropriate substrate as per requirement.
-        -We go with the most common substrate available - P-type.
+- We choose an appropriate substrate as per requirement.
+- We go with the most common substrate available - P-type.
    ![Screenshot from 2023-09-17 18-13-04](https://github.com/simarthethi/Advance_physical_design/assets/140998783/4f90f176-fc61-477e-aff7-89a91184c0ad)
 
 2. Creation of Active regions for transistors
-        -We have to make isolation for each pocket, this is done by growing Silicon Dioxide of 40nm over the P-type substrate, then deposit an 80nm layer of Silicon nitride.
-        -Now deposit 1micron of photoresist. On this we make Mask1 and Mask 2 for the pockets and shower it with UV lights
-        -The photoresist under the masks are protected and remaining is etched away with some chemical reaction. Now the mask is removed.
-        -Now we etch off the extra silicon nitride, thus only silicon nitride left are the ones protected by the photoresist. Now Remove left photoresist.
-        -Now, place the entire thing in oxidation furnace. Silicon nitride protects the SiO2 underneath from growing further.
-        -The growth between the nitride layer acts as the isolation as they don't allow the transistor areas to communicate. This growth is also called bird's beak.
-        -The remaining nitride layer is etched off.
-        -This whole process is called LOCOS - Local oxidation of Silicon
-
-image
+- We have to make isolation for each pocket, this is done by growing Silicon Dioxide of 40nm over the P-type substrate, then deposit an 80nm layer of Silicon nitride.
+- Now deposit 1micron of photoresist. On this we make Mask1 and Mask 2 for the pockets and shower it with UV lights
+- The photoresist under the masks are protected and remaining is etched away with some chemical reaction. Now the mask is removed.
+- Now we etch off the extra silicon nitride, thus only silicon nitride left are the ones protected by the photoresist. Now Remove left photoresist.
+- Now, place the entire thing in oxidation furnace. Silicon nitride protects the SiO2 underneath from growing further.
+- The growth between the nitride layer acts as the isolation as they don't allow the transistor areas to communicate. This growth is also called bird's beak.
+- The remaining nitride layer is etched off.
+- This whole process is called LOCOS - Local oxidation of Silicon image
 
         
 </details>
