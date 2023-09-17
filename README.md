@@ -727,11 +727,108 @@ magic -d XR
 ```
 ![Screenshot from 2023-09-17 22-32-35](https://github.com/simarthethi/Advance_physical_design/assets/140998783/627594f5-1abe-4d2f-b584-e6671a10e096)
 
+- Other way to load it is by defining the name while running magic.
+```bash
+magic -d XR <file_name>.mag
+```
+- We will open up met3.mag
+- We see multiple independent example metal layouts with some DRC errors. We can refer these errors in the the Skywater PDK design rules which are flageed in the DRC engine.
+- We can make a frame around a metal region and in command window write ```drc why``` --> this gives us the DRC violated.
+
+![Screenshot from 2023-09-17 22-36-15](https://github.com/simarthethi/Advance_physical_design/assets/140998783/aef1df1e-68f1-4f46-aa79-86444093c77f)
+
+- Magic uses a lot of derived layers. To see these layers we can make a large box area and use following commands to see metal cut
+```bash
+cif see VIA2
+```
+
+***LAB***
+
+*Exercise 1*
 
 
+- Load the poly.mag
+- Check the drc violation for poly.9
+- Refer the error using skywater pdk design rules
+        - We find that distance between regular polysilicon & poly resistor should be 22um but it is showing 17um and still no errors . We should go to sky130A.tech file and modify as follows to detect this error.
+- In line this
 
+```bash
+*******************************************************
+spacing npres *nsd 480 touching_illegal \
+	"poly.resistor spacing to N-tap < %d (poly.9)"
+*******************************************************
+```
+edit 
+```bash
+*******************************************************
+spacing npres allpolynonres 480 touching_illegal \
+	"poly.resistor spacing to N-tap < %d (poly.9)"
+*******************************************************
+```
+Next edit. In line shown
+```bash
+*******************************************************
+spacing xhrpoly,uhrpoly,xpc alldiff 480 touching_illegal \
+	"xhrpoly/uhrpoly resistor spacing to diffusion < %d (poly.9)"
+*******************************************************
+```
+edit
+```bash
+*******************************************************
+spacing xhrpoly,uhrpoly,xpc allpolynonres 480 touching_illegal \
+	"xhrpoly/uhrpoly resistor spacing to diffusion < %d (poly.9)"
+*******************************************************
+```
+- After this, we ```tech load sky130.tech``` file and execute ```drc check```
 
+![Screenshot from 2023-09-17 22-41-49](https://github.com/simarthethi/Advance_physical_design/assets/140998783/3ccd5dc8-a877-42e7-8ab7-ed0531349b6b)
 
+- We can select ```poly.9``` and run ```drc why``` to check for errors. Now its fine.
+
+![Screenshot from 2023-09-17 22-43-04](https://github.com/simarthethi/Advance_physical_design/assets/140998783/620118e0-82e0-4c55-a115-85f0aa73d52f)
 
 </details>
         
+# Day 4
+
+<details>
+<summary>Timing Analysis and Clock Tree Synthesis (CTS)</summary>
+
+**Standard Cell LEF generation**
+
+During Placement, entire mag information is not necessary. Only the PR boundary, I/O ports, Power and ground rails of the cell is required. This information is defined in LEF file. The main objective is to extract lef from the mag file and plug into our design flow.
+
+**Grid into Track info**
+
+*Track* :A path or a line on which metal layers are drawn for routing. Track is used to define the height of the standard cell.
+
+To implement our own stdcell, few guidelines must be followed
+
+- I/O ports must lie on the intersection on Horizontal and vertical tracks
+- Width and Height of standard cell are odd mutliples of Horizontal track pitch and Vertical track pitch
+
+This information is defined in tracks.info.
+```bash
+/.volare/sky130A/libs.tech/openlane/sky130_fd_sc_hd/tracks.info
+```
+```bash
+li1 X 0.23 0.46
+li1 Y 0.17 0.34
+met1 X 0.17 0.34
+met1 Y 0.17 0.34
+met2 X 0.23 0.46
+met2 Y 0.23 0.46
+met3 X 0.34 0.68
+met3 Y 0.34 0.68
+met4 X 0.46 0.92
+met4 Y 0.46 0.92
+met5 X 1.70 3.40
+met5 Y 1.70 3.40
+```
+- It tells us about all the metal layers as such.
+- We learnt that the input port and output for should be on the intersection of horizontal and vertical tracks, to verify this we set the grids as 
+
+
+        
+</details>
