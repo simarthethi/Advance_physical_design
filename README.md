@@ -376,10 +376,103 @@ run_placement
 ```
 ![Screenshot from 2023-09-16 19-46-38](https://github.com/simarthethi/Advance_physical_design/assets/140998783/d720e1d3-c957-49ab-9fdf-6dad80f7cf22)
 
+- The objective of placement is the convergence of overflow value. If overflow value
+progressively reduces during the placement run it implies that the design will converge and
+placement will be successful. Post placement, the design can be viewed on magic within
+results/placement directory:
+
+```bash
+magic -T ~/.volare/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.nom.lef def read picorv32.def &
+```
+
+![Screenshot from 2023-09-16 19-50-39](https://github.com/simarthethi/Advance_physical_design/assets/140998783/c6af81a1-8521-4666-ac3d-fa8f9576c6fe)
+
+- Zoomed in image
+
+![Screenshot from 2023-09-16 19-56-44](https://github.com/simarthethi/Advance_physical_design/assets/140998783/b5facee6-dc04-46ed-ad29-af48d945d0ac)
+
+</details>
+
+Under this section, we will go through a thorough insight into the Characterizatiob flow and various steps involved, what are my inputs given, my intermediate outputs and final results we get.
+
+Standard cell design flow involves the following
+
+- Inputs:
+        PDKs
+        DRC & LVS rules
+        SPICE models
+        Libraries
+        User-defined specifications.
+
+- Design steps:
+        Circuit design
+        Layout design (Art of layout Euler's path and stick diagram)
+        Extraction of parasitics
+        Characterization (timing, noise, power).
+
+- Outputs:
+        CDL (circuit description language)
+        LEF
+        GDSII
+        extracted SPICE netlist (.cir)
+        timing, noise and power .lib files
+
+**Standard Cell Characterization Flow**
+
+A typical standard cell characterization flow includes the following steps:
+
+1.Read in the models and tech files
+2.Read extracted spice netlist
+3.Recognise behaviour of the cell and buffers
+4.Read the subcircuits
+5.Attach the necessary power sources
+6. Apply stimulus to characterization setup
+7.Provide necessary output capacitive loads
+8.Provide necessary simulation command
 
 
+
+Now all 8 steps are provided together as a configuration file to a characterization software called **GUNA**.
+
+![Screenshot from 2023-09-16 20-01-31](https://github.com/simarthethi/Advance_physical_design/assets/140998783/487de96c-a55b-40f5-85bb-33066b1a43d8)
+
+This software generates timing, noise, power models. These .libs are classified as Timing characterization, power characterization and noise characterization.
+
+</details>
+
+<details>
+<summary> General Timing and Characterization parametes </summary>
+
+Under this section, we will look into the timing characterization and get an understanding of 
+various semantics and syntax of the three .lib files for noise, power and noise.
+
+First we go through the various Timing Parameter Definitions
+
+
+**Propagation Delay**
+
+The time difference between when the transitional input reaches 50% of its final value and when the output reaches 50% of its final value. Poor choice of threshold values lead to negative delay values. Even thought you have taken good threshold values, sometimes depending upon how good or bad the slew, the dealy might be still +ve or -ve.
+
+```bash
+Propagation delay = time(out_thr) - time(in_thr)
+```
+
+**Transition Time**
+
+The time it takes the signal to move between states is the transition time , where the time is measured between 10% and 90% or 20% to 80% of the signal levels.  
+```bash
+Rise transition time = time(slew_high_rise_thr) - time (slew_low_rise_thr)
+
+Low transition time = time(slew_high_fall_thr) - time (slew_low_fall_thr)
+```
+</details>
+
+<details>
+<summary> </summary>
 
 
         
 </details>
+
+
         
