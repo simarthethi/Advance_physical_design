@@ -979,9 +979,6 @@ run_placement
 ```
 ![Screenshot from 2023-09-18 01-25-07](https://github.com/simarthethi/Advance_physical_design/assets/140998783/38e7fe85-59e9-42dc-98f8-b7329699b403)
 
-- Now, we check for legality &To check the layout invoke magic from the ```results/placement``` directory
-
-![Screenshot from 2023-09-18 01-27-14](https://github.com/simarthethi/Advance_physical_design/assets/140998783/eeac82c8-5fe2-42d7-97e3-7210ee8f9dbc)
 
 </details>
 
