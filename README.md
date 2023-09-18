@@ -1028,7 +1028,8 @@ Since clock tree synthesis has not been performed yet, the analysis is with resp
 
 ```base.sdc``` is located in ```vsdstdcelldesigns/extras``` directory. So, we copy it into our design folder using ```cp my_base.sdc /home/simar-thethi/OpenLane/designs/picorv32a/src/```
 
-![Screenshot from 2023-09-18 01-36-22](https://github.com/simarthethi/Advance_physical_design/assets/140998783/05b8f296-0593-4f45-b59b-f6b609ebabae)
+![Screenshot from 2023-09-18 10-14-38](https://github.com/simarthethi/Advance_physical_design/assets/140998783/7390b453-65e8-4382-93cc-59e0872f60a0)
+
 
 From the timing report, we can improve slack by upsizing the cells i.e., by replacing the cells with high drive strength and we can see significant changes in the slack. Since there were no timing violations, we can skip this step.
 
@@ -1132,10 +1133,10 @@ report_checks -path_delay min_max -format full_clock_expanded -digits 4
 
 - Since, clock is propagated, from this stage, we do timing analysis with real clocks. From now post cts analysis is performed by operoad within the openlane flow
 - Hold Slack
-![Screenshot from 2023-09-18 02-13-20](https://github.com/simarthethi/Advance_physical_design/assets/140998783/59f37b12-1049-4986-b5e3-33ee6db4b001)
+![Screenshot from 2023-09-18 11-03-56](https://github.com/simarthethi/Advance_physical_design/assets/140998783/bc447aa4-ff81-4fb9-9fff-aaa7cd053d85)
 
 - Setup Slack
-![Screenshot from 2023-09-18 02-15-34](https://github.com/simarthethi/Advance_physical_design/assets/140998783/221d8d04-8aa2-4da2-9fbb-9a1a62eba397)
+![Screenshot from 2023-09-18 11-04-04](https://github.com/simarthethi/Advance_physical_design/assets/140998783/819839ec-826d-41f1-9b7a-c3eb4c70db01)
 
 </details>
 
@@ -1172,7 +1173,7 @@ report_checks -path_delay min_max -format full_clock_expanded -digits 4
 ```bash
 gen_pdn
 ```
-![image](https://github.com/simarthethi/Advance_physical_design/assets/140998783/e544e65f-954c-4bdb-8647-ce321777b78c)
+![Screenshot from 2023-09-18 23-56-23](https://github.com/simarthethi/Advance_physical_design/assets/140998783/24df2f2b-2c5e-4cb8-a765-ad870597aaff)
 
 - gen_pdn Generates the power distribution network.
 - The power distribution network has to take the design_cts.def as the input def file.
@@ -1234,7 +1235,8 @@ Make sure the CURRENT_DEF is set to pdn.def
 ```bash
 run_routing
 ```
-![Screenshot from 2023-09-18 02-38-40](https://github.com/simarthethi/Advance_physical_design/assets/140998783/2e3bf34d-d88b-4be2-9388-2983907dc772)
+![Screenshot from 2023-09-18 23-57-59](https://github.com/simarthethi/Advance_physical_design/assets/140998783/1602934c-fef9-4ef9-a247-a0a6ae6cbd3f)
+
 
 ![Screenshot from 2023-09-18 02-40-57](https://github.com/simarthethi/Advance_physical_design/assets/140998783/962a76a5-f183-4880-a1df-c7e43bd74497)
 
@@ -1244,9 +1246,10 @@ run_routing
 ```bash
 magic -T ~/.volare/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.nom.lef def read picorv32.def &
 ```
-![Screenshot from 2023-09-18 02-41-53](https://github.com/simarthethi/Advance_physical_design/assets/140998783/1278b86e-5343-4ffa-8fdb-5155ad79d50e)
+![Screenshot from 2023-09-18 16-50-39](https://github.com/simarthethi/Advance_physical_design/assets/140998783/7a5e2c7e-b37e-4a29-ba1d-727288779aa7)
 
-![Screenshot from 2023-09-18 02-42-46](https://github.com/simarthethi/Advance_physical_design/assets/140998783/e09dcf6c-ad70-4726-bd8f-2ca95557e8f1)
+![Screenshot from 2023-09-18 16-59-46](https://github.com/simarthethi/Advance_physical_design/assets/140998783/94c56d6c-c293-44bd-a330-bd44dabf8adc)
+
 
 
 
